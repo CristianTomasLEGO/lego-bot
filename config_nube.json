@@ -20,22 +20,11 @@
       "listados": ["https://www.jugueteshop.es/busqueda?q=lego"],
       "paginas_max": 15
     },
- {
-      "nombre": "ToysRus",
-      "listados": ["https://www.toysrus.es/LEGO/c/LEGO"],
-      "paginas_max": 15
-    },
 {
       "nombre": "Juguettos",
       "listados": ["https://juguettos.com/1238-lego#/page-{n}"],
       "paginas_max": 15
     },
-{
-      "nombre": "PcComponentes",
-      "listados": ["https://www.pccomponentes.com/marcas/lego?srsltid=AYCX9vIo2Sbcg7w3obu2MzmCmLC6ILyS4H7s2z29_T1o_ThcmoQusWtF"],
-      "paginas_max": 15
-    }
-
   ],
   "reventa_manual": {}
 }
