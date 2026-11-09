@@ -24,7 +24,7 @@
       "nombre": "Juguettos",
       "listados": ["https://juguettos.com/1238-lego#/page-{n}"],
       "paginas_max": 15
-    },
+    }
   ],
   "reventa_manual": {}
 }
