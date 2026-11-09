@@ -1,0 +1,62 @@
+name: Bot LEGO
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    inputs:
+      prueba_telegram:
+        description: "Mandar solo un aviso de ejemplo a Telegram (para probar)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bot-lego
+  cancel-in-progress: false
+
+jobs:
+  pasada:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Recuperar historial de precios
+        run: |
+          if git ls-remote --exit-code --heads origin datos > /dev/null 2>&1; then
+            git fetch --depth=1 origin datos
+            git checkout origin/datos -- precios.db
+          fi
+
+      - name: Aviso de ejemplo (prueba de Telegram)
+        if: ${{ github.event.inputs.prueba_telegram == 'true' }}
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python bot.py --config config_nube.json --alerta-ejemplo
+
+      - name: Ejecutar el bot
+        if: ${{ github.event.inputs.prueba_telegram != 'true' }}
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python bot.py --config config_nube.json
+
+      - name: Guardar historial de precios
+        if: ${{ always() }}
+        run: |
+          [ -f precios.db ] || exit 0
+          git config user.name "bot-lego"
+          git config user.email "bot-lego@users.noreply.github.com"
+          git checkout --orphan datos-nuevo
+          git rm -rf --cached . > /dev/null 2>&1 || true
+          git add -f precios.db
+          git commit -m "historial $(date -u +%F-%H%M)"
+          git push -f origin datos-nuevo:datos
