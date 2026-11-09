@@ -17,7 +17,7 @@
   "tiendas": [
     {
       "nombre": "JugueteShop",
-      "listados": ["https://www.jugueteshop.es/busqueda?q=lego"],
+      "listados": ["https://www.jugueteshop.es/busqueda?q=lego&page={n}"],
       "paginas_max": 15
     },
 {
